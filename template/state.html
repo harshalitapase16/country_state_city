@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>State form</title>
+</head>
+<body>
+  <h1>STATE FORM</h1>
+ <form action="{% url 'state' %}" method="post">
+{% csrf_token %}
+  <label for=""><b> Select Country</b></label><br>
+    <select name="country_id" id=""><br>
+        {% for item in countryobj %}
+        <option value="{{item.id}}">{{item.name}}</option>
+        {% endfor %}
+    </select><br><br>
+
+  <label for=""><b>State Name</b></label> <br>
+  <input type="text" name="statename" id=""> <br><br>
+
+  <label for=""><b>Slug</b></label><br>
+  <input type="text" name="stateslug" id=""> <br><br>
+
+  <label for=""><b>Language</b></label><br>
+  <input type="text" name="language" id=""> <br><br>
+
+  <label for=""><b>Population</b></label><br>
+  <input type="text" name="population" id=""> <br><br>
+
+  <button type="submit">Submit</button>
+ </form> <br>
+
+ <div style="display: flex;column-gap: 5px;">
+ <a href="{% url 'country' %}"><button><b>Country</b></button></a><br><br>
+ <a href="{% url 'city' %}"><button><b>City</b></button></a><br><br>
+ </div>
+
+ <table border="1px">
+  
+  <tr>
+  <th>Country Name</th>
+  <th>State Name</th>
+  <th>Slug</th>
+  <th>Language</th>
+  <th>Population</th>
+  <th>Active</th>
+  <th>Action</th>
+ </tr>
+
+ {% for item in state %}
+ <tr>
+  <td>{{item.country}}</td>
+  <td>{{item.statename}}</td>
+  <td>{{item.stateslug}}</td>
+  <td>{{item.language}}</td>
+  <td>{{item.population}}</td>
+
+  {% if is_active %}
+      <td>Active</td>
+  {% else %}
+      <td>In-active</td>
+  {% endif %}
+
+  <td>
+   <a href="{% url 'stateupdate' item.id %}"><button>Edit</button></a>
+   <a href="{% url 'deletestate' item.id %}"><button>Delete</button></a> 
+  </td>
+ </tr>
+ {% endfor %}
+ </table>
+</body>
+</html>

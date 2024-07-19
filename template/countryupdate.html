@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>country update</title>
+</head>
+<body>
+ <h1>COUNTRY UPDATE FORM</h1>
+ <form action="{% url 'countryupdate' country.id %}" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <label for="">Country Name</label> <br>
+  <input type="text" name="country_name" value="{{country.name}}" id="" disabled><br>
+
+  <label for="">Country Id</label> <br>
+  <input type="number" name="country_id" value="{{country.id}}" id="" disabled> <br>
+  
+  <label for="">Code</label><br>
+  <input type="text" name="code" value="{{country.code}}" id=""><br>
+
+  <label for="">Slug</label><br>
+  <input type="text" name="slug" value="{{country.slug}}" id=""><br><br>
+
+  <label for="">Flag</label><br>
+  <input type="file" name="flag" value="{{country.flag}}" id=""><br><br>
+  <img src="{{country.flag.url}}" alt="flag" width="50px" style="border: 1px solid black;"> <br>
+
+  <label for="">State Available</label>
+  {% if country.is_state_available %}
+   <input type="checkbox" name="state_available" value="1" id="" checked><br><br>
+  {% else %}
+  <input type="checkbox" name="state_available" value="1" id=""><br><br>
+  {% endif %}
+
+  <button type="submit">Submit</button>
+ </form> <br>
+ <a href="{% url 'country' %}"><button>Cancel</button></a>
+
+</body>
+</html>

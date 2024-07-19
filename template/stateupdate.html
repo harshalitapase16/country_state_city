@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>State Form</title>
+</head>
+
+<body>
+  <h1>STATE UPDATE FORM</h1>
+ <form action="{% url 'stateupdate' state.id %}" method="post">
+  {% csrf_token %}
+
+   <label for="">country_name</label> <br>
+   <input type="text" name="countryname" value="{{country.name}}" id="" disabled><br>
+
+   <label for="">country_Id</label> <br>
+   <input type="number" name="country_id" value="{{country.id}}" id=""><br>
+
+   <label for="">State Name</label> <br>
+   <input type="text" name="statename" value="{{state.statename}}" id=""><br>
+
+   <label for="">Slug</label><br>
+   <input type="text" name="stateslug" value="{{state.stateslug}}" id=""><br>
+
+   <label for="">Language</label><br>
+   <input type="text" name="language" value="{{state.language}}" id=""><br>
+
+   <label for="">Population</label><br>
+   <input type="text" name="population" value="{{state.population}}" id=""><br><br>
+
+   <button type="submit">Submit</button>
+ </form> <br>
+ <a href="{% url 'state' %}"><button>Cancel</button></a>
+</body>
+
+</html>

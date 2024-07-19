@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Update City</title>
+</head>
+<body>
+    <h1>CITY UPDATE FORM</h1>
+ <form action="{% url 'cityupdate' city.id %}" method="post">
+  {% csrf_token %}
+  <label for="countrySelect">Select Country</label><br>
+
+  <label for="cityName">City Name</label><br>
+  <input type="text" name="city_name" id="cityName" value="{{ city.name }}"><br>
+
+  <label for="slug">Slug</label><br>
+  <input type="text" name="slug" id="slug" value="{{ city.slug }}"><br><br>
+
+  <button type="submit">Update</button>
+ </form><br>
+ <a href="{% url 'city' %}"><button>Cancel</button></a> 
+<br>
+ <div style="display: flex; column-gap: 5px;">
+  <a href="{% url 'country' %}"><button><b>Country</b></button></a><br><br>
+  <a href="{% url 'state' %}"><button><b>State</b></button></a><br><br>
+ </div>
+
+ <script>
+  document.getElementById('countrySelect').addEventListener('change', function() {
+      var countryId = this.value;
+      sendCountryIdToServer(countryId);
+  });
+
+  function sendCountryIdToServer(countryId) {
+      fetch('/getstate/', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': '{{ csrf_token }}'
+          },
+          body: JSON.stringify({ country_id: countryId })
+      })
+      .then(response => response.json())
+      .then(data => {
+          populateStateDropdown(data.state);
+      })
+      .catch(error => {
+          console.error('There was a problem with the fetch operation:', error);
+      });
+  }
+
+  function populateStateDropdown(states) {
+      var stateSelect = document.getElementById('stateSelect');
+      stateSelect.innerHTML = ''; // Clear existing options
+      stateSelect.appendChild(new Option('Select a state', '')); // Default option
+
+      states.forEach(function(state) {
+          var option = new Option(state.state_name, state.id);
+          stateSelect.appendChild(option);
+      });
+  }
+ </script>
+</body>
+</html>

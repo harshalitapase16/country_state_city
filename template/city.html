@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>City Management</title>
+</head>
+<body>
+ <form action="{% url 'city' %}" method="post">
+  {% csrf_token %}
+  <label for="countrySelect">Select Country</label><br>
+
+  <select name="country_id" id="countrySelect">
+    <option value="">Select Country</option>
+
+    {% for item in country %}
+      <option value="{{ item.id }}">{{ item.name }}</option>
+    {% endfor %}
+  </select><br><br>
+
+  <label for="stateSelect">Select State</label><br>
+  <select name="state_id" id="stateSelect">
+      <option value="">Select State</option>
+  </select><br><br>
+
+  <label for="cityName">City Name</label><br>
+  <input type="text" name="city_name" id="cityName"><br>
+
+  <label for="slug">Slug</label><br>
+  <input type="text" name="slug" id="slug"><br><br>
+
+  <button type="submit">Submit</button>
+ </form><br>
+
+ <div style="display: flex; column-gap: 5px;">
+  <a href="{% url 'country' %}"><button><b>Country</b></button></a><br><br>
+  <a href="{% url 'state' %}"><button><b>State</b></button></a><br><br>
+ </div>
+
+ <table border="1px">
+    <tr>
+      <th>Country Name</th>
+      <th>State Name</th>
+      <th>City Name</th>
+      <th>Slug</th>
+      <th>Action</th>
+    </tr>
+    {% for city in cities %}
+    <tr>
+      <td>{{ city.country.name }}</td>
+      <td>{{ city.state.statename }}</td>
+      <td>{{ city.name }}</td>
+      <td>{{ city.slug }}</td>
+      <td>
+        <a href="{% url 'cityupdate' city.id %}"><button>Edit</button></a>
+        <a href="{% url 'citydelete' city.id %}"><button>Delete</button></a>
+      </td>
+    </tr>
+    {% endfor %}
+   </table>
+
+ <script>
+  document.getElementById('countrySelect').addEventListener('change', function() {
+      var countryId = this.value;
+      sendCountryIdToServer(countryId);
+  });
+
+  function sendCountryIdToServer(countryId) {
+      fetch('/getstate/', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': '{{ csrf_token }}'
+          },
+          body: JSON.stringify({ country_id: countryId })
+      })
+      .then(response => response.json())
+      .then(data => {
+          populateStateDropdown(data.state);
+      })
+      .catch(error => {
+          console.error('There was a problem with the fetch operation:', error);
+      });
+  }
+
+  function populateStateDropdown(states) {
+      var stateSelect = document.getElementById('stateSelect');
+      stateSelect.innerHTML = '';
+      stateSelect.appendChild(new Option('Select State', ''));
+      states.forEach(function(state) {
+          var option = new Option(state.state_name, state.id);
+          stateSelect.appendChild(option);
+      });
+  }
+ </script>
+
+</body>
+</html>
